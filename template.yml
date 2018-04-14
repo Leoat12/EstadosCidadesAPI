@@ -1,0 +1,57 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Globals:
+  Function: 
+    Runtime: java8
+    Timeout: 3
+    MemorySize: 512
+  Api:
+    EndpointConfiguration: REGIONAL
+Resources:
+  EstadosAPIBackEndFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: br.com.leoat12.Handler::handleRequest
+      Timeout: 10
+      CodeUri: ./build/distributions/estados.zip    
+      FunctionName: EstadosAPIBackEndFunction
+      Description: Lambda fucntion responsible for the back-end communication with DynamoDB to retrive states data.
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action: 
+               - dynamodb:DeleteItem
+               - dynamodb:GetItem
+               - dynamodb:PutItem
+               - dynamodb:Scan
+               - dynamodb:UpdateItem
+              Resource: arn:aws:dynamodb:<region>:<account-id>:table/*
+      Events:
+        estados:
+          Type: Api
+          Properties:
+            Path: /
+            Method: GET
+            RestApiId: !Ref estadosApiGateway
+  estadosApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: estadosApiGateway
+      StageName: estados
+      DefinitionUri: ./swagger.yml
+      Variables:
+        LambdaFunctionName: !Ref EstadosAPIBackEndFunction
+  EstadosCidades:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      TableName: EstadosCidades
+      PrimaryKey:
+        Name: sigla
+        Type: String
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+
+

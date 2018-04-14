@@ -1,0 +1,36 @@
+swagger: "2.0"
+info:
+  description: "This an API to retrive brazilian states data"
+  version: "1.0.0"
+  title: "Estados API"
+basePath: "/estados"
+schemes:
+- "https"
+paths:
+  /:
+    get:
+      summary: "Get a estado object"
+      description: ""
+      operationId: "getEstado"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "uf"
+        description: "Pet object that needs to be added to the store"
+        required: true
+        type: string
+      responses:
+        200:
+          description: "The state requested is retrieved"
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+        requestTemplates:
+          application/json: "\"$input.params('uf')\""
+        uri: arn:aws:apigateway:<region>:lambda:path/2015-03-31/functions/arn:aws:lambda:<region>:<account-id>:function:EstadosAPIBackEndFunction/invocations
+        passthroughBehavior: "when_no_templates"
+        httpMethod: "POST"
+        contentHandling: "CONVERT_TO_TEXT"
+        type: "aws"
