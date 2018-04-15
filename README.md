@@ -45,4 +45,17 @@ Substitua `<bucket-name>` pelo nome de seu S3 bucket. Caso não possua um, crie 
 
 `sam deploy --template-file ./packaged.yaml --stack-name <stack-name> --capabilities CAPABILITY_IAM` 
 
-7. Teste a API utilizando o Console da AWS. Copie a URL do endpoint e teste a API usando curl, Postman, etc.
+
+### Carregamento dos dados no DynamoDB
+
+A stack implantada também cria a tabela no DynamoDB necessária para consultar os dados de estados e cidades. Porém, é necessário carregar os dados antes que a API fique 100% funcional. Para isto, na pasta load-data existe um script em Python que carrega os dados do arquivo JSON que o acompanha. Para executar o script tenha certeza que Python esteja instalado e execute os comandos abaixo:
+
+`pip install boto3`
+
+`cd load-data`
+
+`python load_dynamo_db.py`
+
+### Teste da API
+
+A API pode ser testada utilizando console da AWS ou usando curl, Postman, etc.
