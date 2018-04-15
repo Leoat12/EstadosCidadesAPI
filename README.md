@@ -38,6 +38,7 @@ Este projeto consiste em uma função serverless para AWS Lambda que é utilizad
 5. Execute o SAM CLI para empacotar os aterfatos necessários para a implantação da stack no CloudFormation. 
 
 `sam package --template-file template.yml --s3-bucket <bucket-name> --output-template-file packaged.yaml`
+
 Substitua `<bucket-name>` pelo nome de seu S3 bucket. Caso não possua um, crie um antes deste passo. 
 
 6. Realize a implantação da stack usando SAM CLI e CloudFormation (O usuário da AWS precisa ter as permissões necessárias para criar todos os recursos da stack.)
